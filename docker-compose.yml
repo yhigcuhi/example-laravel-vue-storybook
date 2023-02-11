@@ -3,60 +3,60 @@ version: '3.8'
 
 # 立てるコンテナ一覧
 services:
-  # laravel
-  laravel:
-    # 管理コンテナ名
-    container_name: ${APP_NAME}-laravel
-    # Dockerファイルにて 定義
-    build:
-      context: .
-      dockerfile: ./docker/laravel/Dockerfile
-    # 場所
-    volumes:
-      - ./laravel-src/:/var/www/html
-    ports:
-      - ${VITE_PORT:-5173}:5173
-    # 環境設定値設定
-    environment:
-      # アプリ名反映
-      - APP_NAME=${APP_NAME}
-      - APP_URL=${APP_URL}
-  # Laravel用の WEBサーバー (nginx)
-  web:
-    # 管理コンテナ名
-    container_name: ${APP_NAME}-web
-    # Dockerファイルにて 定義
-    build:
-      context: .
-      dockerfile: ./docker/web/Dockerfile
-    # 利用ポート
-    ports:
-      - ${WEB_PORT:-8000}:80
-    # 依存関係
-    depends_on:
-      - laravel
-    # 場所
-    volumes:
-      - ./laravel-web/:/var/www/html
-  # storybook単体 TODO:実験中
-  # testsb:
+  # # laravel
+  # laravel:
   #   # 管理コンテナ名
-  #   container_name: ${APP_NAME}-storybook
-  #   # Dockerファイルにて定義
-  #   build: 
-  #       context: .
-  #       dockerfile: ./docker/storybook/Dockerfile
+  #   container_name: ${APP_NAME}-laravel
+  #   # Dockerファイルにて 定義
+  #   build:
+  #     context: .
+  #     dockerfile: ./docker/laravel/Dockerfile
   #   # 場所
   #   volumes:
-  #     - ./test-storybook-vue/:/var/www/html
-  #   # PORT = for watch
-  #   ports: 
-  #     - ${STORYBOOK_VUE_PORT:-8080}:5173
-  #     # 変更監視用か wsも6006に向けて通信するコードになっているっぽい なので一旦固定 6006 (storybook)
-  #     - 6006:6006
-  #   # 環境設定
+  #     - ./laravel-src/:/var/www/html
+  #   ports:
+  #     - ${VITE_PORT:-5173}:5173
+  #   # 環境設定値設定
   #   environment:
-  #     # Node17以降からのOpenSSL 3の互換エラーが stroybook立ち上げると 発生したので
-  #     - NODE_OPTIONS=--openssl-legacy-provider
-  #   # コンテナを正常終了するのを防ぐ
-  #   tty: true
+  #     # アプリ名反映
+  #     - APP_NAME=${APP_NAME}
+  #     - APP_URL=${APP_URL}
+  # # Laravel用の WEBサーバー (nginx)
+  # web:
+  #   # 管理コンテナ名
+  #   container_name: ${APP_NAME}-web
+  #   # Dockerファイルにて 定義
+  #   build:
+  #     context: .
+  #     dockerfile: ./docker/web/Dockerfile
+  #   # 利用ポート
+  #   ports:
+  #     - ${WEB_PORT:-8000}:80
+  #   # 依存関係
+  #   depends_on:
+  #     - laravel
+  #   # 場所
+  #   volumes:
+  #     - ./laravel-web/:/var/www/html
+  # storybook単体 TODO:実験中
+  testsb:
+    # 管理コンテナ名
+    container_name: ${APP_NAME}-storybook
+    # Dockerファイルにて定義
+    build: 
+        context: .
+        dockerfile: ./docker/storybook/Dockerfile
+    # 場所
+    volumes:
+      - ./test-storybook-vue/:/var/www/html
+    # PORT = for watch
+    ports: 
+      - ${STORYBOOK_VUE_PORT:-8080}:5173
+      # 変更監視用か wsも6006に向けて通信するコードになっているっぽい なので一旦固定 6006 (storybook)
+      - 6006:6006
+    # 環境設定
+    environment:
+      # Node17以降からのOpenSSL 3の互換エラーが stroybook立ち上げると 発生したので
+      - NODE_OPTIONS=--openssl-legacy-provider
+    # コンテナを正常終了するのを防ぐ
+    tty: true
